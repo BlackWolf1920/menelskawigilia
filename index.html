@@ -8,53 +8,69 @@
         body {
             background-color: black;
             color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
             text-align: center;
+            font-family: Arial, sans-serif;
         }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        #playButton {
+            background-color: #ff4500;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 20px;
         }
-        #timer {
-            font-size: 2rem;
+        #countdown {
+            font-size: 30px;
+            margin-top: 50px;
         }
     </style>
-    <script>
-        function updateCountdown() {
-            const eventDate = new Date("2024-12-20T00:00:00");
-            const now = new Date();
-            const diff = eventDate - now;
-
-            if (diff <= 0) {
-                document.getElementById("timer").textContent = "Czas na Menelską Wigilię!";
-                return;
-            }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            document.getElementById("timer").textContent = 
-                `${days} dni, ${hours} godzin, ${minutes} minut, ${seconds} sekund`;
-        }
-
-        setInterval(updateCountdown, 1000);
-    </script>
 </head>
 <body>
-    <h1>Odliczanie do Menelskiej Wigilii</h1>
-    <div id="timer">Ładowanie...</div>
-<div id="audio-container">    
-    <audio autoplay loop>
-        <source src="muzyka.mp3" type="audio/mpeg">
-        Twoja przeglądarka nie obsługuje elementu audio.
+    <h1>Menelska Wigilia</h1>
+    <div id="countdown"></div>
+    <button id="playButton">Start Muzyki</button>
+
+    <!-- Tag audio, bez autoodtwarzania -->
+    <audio id="audio" preload="auto">
+        <source src="muzyka.mp3" type="audio/mp3">
+        Twoja przeglądarka nie wspiera odtwarzania dźwięku.
     </audio>
+
+    <script>
+        // Funkcja do odliczania czasu
+        function updateCountdown() {
+            const targetDate = new Date("2024-12-20T00:00:00").getTime();
+            const currentDate = new Date().getTime();
+            const remainingTime = targetDate - currentDate;
+
+            // Oblicz dni, godziny, minuty i sekundy
+            const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+            // Wyświetl odliczanie na stronie
+            document.getElementById("countdown").innerHTML = 
+                `${days} dni ${hours} godzin ${minutes} minut ${seconds} sekund`;
+
+            // Jeśli czas minął
+            if (remainingTime <= 0) {
+                document.getElementById("countdown").innerHTML = "Menelska Wigilia już tutaj!";
+            }
+        }
+
+        // Aktualizuj odliczanie co sekundę
+        setInterval(updateCountdown, 1000);
+
+        // Funkcja do uruchomienia muzyki po kliknięciu przycisku
+        document.getElementById('playButton').addEventListener('click', function() {
+            var audio = document.getElementById('audio');
+            audio.play(); // Rozpoczyna odtwarzanie muzyki
+            this.style.display = 'none'; // Ukrywa przycisk po kliknięciu
+        });
+    </script>
 </body>
 </html>
+
